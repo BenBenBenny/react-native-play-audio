@@ -25,6 +25,7 @@ public class RNPlayAudioModule extends ReactContextBaseJavaModule {
             public void onCompletion(MediaPlayer mp) {
                 if (onEnd != null) {
                     onEnd.invoke();
+                    onEnd = null;
                 }
             }
         });
@@ -69,11 +70,15 @@ public class RNPlayAudioModule extends ReactContextBaseJavaModule {
         }
     }
 
+    /**
+     * onEnd 一定要清掉，RN 的一个回调不可以调用两次
+     */
     @ReactMethod
     public void stop() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
+            onEnd = null;
         }
     }
 
